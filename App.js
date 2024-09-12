@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import tw from 'twrnc';
 
 export default function App() {
@@ -69,6 +69,28 @@ export default function App() {
     if (didXWin()) return 'X';
   }
 
+  const makeRandomMove = () => {
+    const availableSquares = board
+      .map((square, index) => (square === null ? index : null))
+      .filter((value) => value !== null)
+    
+    if (availableSquares.length === 0) return;
+
+    const randomIndex = Math.floor(Math.random() * availableSquares.length);
+    //const randomMove = availableSquares[randomIndex];
+    
+    const newBoard = [...board];
+    newBoard[availableSquares[randomIndex]] = isXNext ? 'X' : 'O';
+    setBoard(newBoard);
+
+    // Check for winner
+    if (checkGameOver(newBoard)) {
+      setIsGameOver(true); // Set game over if someone wins
+    } else {
+      setIsXNext(!isXNext); // Switch player
+    }
+  }
+
   const handlePress = (index) => {
     if (board[index] || isGameOver) {
       return; // Square taken or game already over
@@ -79,44 +101,57 @@ export default function App() {
     newBoard[index] = isXNext ? "X" : "O"; // Update square with X or O
     setBoard(newBoard);
 
-    console.log(board);
-    console.log("checkGameOver: ", checkGameOver('X'));
-
-
     // Check for winner
     if (checkGameOver(newBoard)) {
       setIsGameOver(true); // Set game over if someone wins
     } else {
       setIsXNext(!isXNext); // Switch player
     }
+
+    //makeRandomMove();
     
   };
+
+  // UseEffect to make the Ai move after the player
+  useEffect(() => {
+    if (!isGameOver && !isXNext) {
+      // Ai makes move after short delay
+      const makeMove = setTimeout(() => makeRandomMove(), 500);
+
+      return () => clearTimeout(makeMove); // Cleanup timeout
+    }
+  }, [isGameOver, isXNext]);
 
   const renderCell = (index) => {
     return (
       <TouchableOpacity
         key={index}
-        style={tw`h-1/3 aspect-square border-2 border-black justify-center items-center`}
+        style={tw`h-1/3 aspect-square bg-white/20 border-2 border-black justify-center items-center`}
         onPress={() => handlePress(index)}
       >
-        <Text style={tw`text-4xl font-bold`}>{ board[index] }</Text>
+        <Text style={tw`text-4xl font-bold text-[#fffff0]`}>{ board[index] }</Text>
       </TouchableOpacity>
     )
   }
 
   return (
-    <View style={tw`flex-1 items-center justify-center bg-zinc-400`}>
+    <View style={tw`flex-1 `}>
       <StatusBar style="auto" />
-      
+      <ImageBackground
+        source={require('./assets/images/tic tac toe background.png')}
+        resizeMode='cover'
+        blurRadius={70}
+        style={tw`flex-1 items-center justify-center`}
+      >
         {
           isGameOver ? (
             <View>
-            <Text style={tw`text-4xl`}>Game over, { whoWon() } won!</Text>
+            <Text style={tw`text-4xl text-[#fffff0]`}>Game over, { whoWon() } won!</Text>
             </View>
           ):null
         }
       
-      <View style={tw`w-9/10 aspect-square ${isGameOver ? 'bg-red-300' : 'bg-blue-300'} flex-row flex-wrap`}>
+      <View style={tw`w-9/10 aspect-square ${isGameOver ? '' : ''} flex-row flex-wrap`}>
 
         {
           board.map((value, index) => 
@@ -127,7 +162,7 @@ export default function App() {
       </View>
     
       <TouchableOpacity>
-        <Text>Unbeatable AI Tic-Tac-Toe</Text>
+        <Text style={tw`text-[#fffff0]`}>Unbeatable AI Tic-Tac-Toe</Text>
       </TouchableOpacity>
 
       {/* Clear board */}
@@ -135,10 +170,13 @@ export default function App() {
         onPress={() => {
           setBoard(Array(9).fill(null));
           setIsGameOver(false);
+          setIsXNext(true);
         }}
       >
-        <Text>Clear board</Text>
-      </TouchableOpacity>
+          <Text style={tw`text-[#fffff0]`}>Clear board</Text>
+        </TouchableOpacity>
+        
+      </ImageBackground>
     </View>
   );
 }
