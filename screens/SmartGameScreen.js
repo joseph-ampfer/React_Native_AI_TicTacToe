@@ -7,17 +7,70 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-export default function ChildGameScreen({navigation}) {
+export default function SmartGameScreen({navigation}) {
 
   // Initialize an empty board
-  const [board, setBoard] = useState(Array(9).fill(null));
+  const [realBoard, setrealBoard] = useState(Array(9).fill(null));
+  const [isGameOver, setIsGameOver] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const [isXNext, setIsXNext] = useState(true);
   const [aiPressedIndex, setAiPressedIndex] = useState(null);
 
+  // Players(s): a function that, given a state s, returns which player’s turn it is (X or O).
+  const player = (board) => {
+    let xCount = 0;
+    let oCount = 0;
+    for (let i = 0; i < 9; i++) {
+      if (board[i] == 'X') xCount++;
+      if (board[i] == 'O') oCount++;
+    }
+    return xCount > oCount ? 'O' : 'X';
+  }
 
-  // Winning conditions for X
-  const didXWin = () => {
+  //console.log(player(board));
+
+  // Actions(s): a function that, given a state s, return all the legal moves in this state (what spots are free on the board).
+  const actions = (board) => {
+    const availableMoves = board.map((value, index) => value == null ? index : null).filter((value) => value != null);
+    return availableMoves
+  }
+
+  //console.log(actions(board));
+
+  // Result(s, a): a function that, given a state s and action a, returns a new state. This is the board that resulted from performing the action a on state s (making a move in the game).
+  const result = (board, action) => {
+    const xORy = player(board);
+    const newBoard = [...board]; // copy of board
+    newBoard[action] = xORy;
+    return newBoard;
+  }
+
+  //console.log(result(board, 1));
+
+  // Terminal(s): a function that, given a state s, checks whether this is the last step in the game, i.e. if someone won or there is a tie. Returns True if the game has ended, False otherwise.
+  const terminal = (boardCheck) => {
+    if (actions(boardCheck).length == 0) {
+      return true
+    } else if (
+      // horizontal rows
+      (boardCheck[0] && boardCheck[0] === boardCheck[1] && boardCheck[1] == boardCheck[2] ) ||
+      (boardCheck[3] && boardCheck[3] === boardCheck[4] && boardCheck[4] === boardCheck[5]) ||
+      (boardCheck[6] && boardCheck[6] === boardCheck[7] && boardCheck[7] === boardCheck[8]) ||
+      // vertical columns
+      (boardCheck[0] && boardCheck[0] === boardCheck[3] && boardCheck[3] === boardCheck[6]) ||
+      (boardCheck[1] && boardCheck[1] === boardCheck[4] && boardCheck[4] === boardCheck[7]) ||
+      (boardCheck[2] && boardCheck[2] === boardCheck[5] && boardCheck[5] === boardCheck[8]) ||
+      // diagonals
+      (boardCheck[0] && boardCheck[0] === boardCheck[4] && boardCheck[4] === boardCheck[8]) ||
+      (boardCheck[2] && boardCheck[2] === boardCheck[4] && boardCheck[4] === boardCheck[6])
+    ) {
+      return true
+    } else return false
+  }
+
+  //console.log(terminal(board));
+    // Winning conditions for X
+  const didXWin = (board) => {
     return (
       // horizontal rows
       (board[0] === 'X' && board[1] === 'X' && board[2] === 'X') ||
@@ -33,8 +86,8 @@ export default function ChildGameScreen({navigation}) {
     );
   };
 
-    // Winning conditions for X
-  const didOWin = () => {
+  // Winning conditions for X
+  const didOWin = (board) => {
     return (
       // horizontal rows
       (board[0] === 'O' && board[1] === 'O' && board[2] === 'O') ||
@@ -50,7 +103,110 @@ export default function ChildGameScreen({navigation}) {
     );
   };
 
-  const [isGameOver, setIsGameOver] = useState(false);
+  // Utility(s): a function that, given a terminal state s, returns the utility value of the state: -1, 0, or 1.
+  const utility = (terminalBoard) => {
+    // x win is 1, o win is -1
+    if (didXWin(terminalBoard)) {
+      return 1
+    } else if (didOWin(terminalBoard)) {
+      return -1
+    } else return 0
+  }
+
+  //console.log(utility(['X', 'X', 'X']), 'UTILITY');
+
+  const maxValue = (board, alpha, beta) => {
+    console.log('maxValue running')
+    if (terminal(board)) {
+      return utility(board);
+    }
+    let v = -Infinity;
+    const movesAvailable = actions(board);
+
+    for (let i = 0; i < movesAvailable.length; i++) {
+      v = Math.max(v, minValue(result(board, movesAvailable[i]), alpha, beta));
+      alpha = Math.max(alpha, v);
+      if (beta <= alpha) break;
+    }
+    return v;
+  }
+
+  const minValue = (board, alpha, beta) => {
+    console.log('minValue running')
+    if (terminal(board)) {
+      return utility(board);
+    }
+    let v = Infinity;
+    const movesAvailable = actions(board);
+    for (let i = 0; i < movesAvailable.length; i++) {
+      v = Math.min(v, maxValue(result(board, movesAvailable[i]), alpha, beta));
+      beta = Math.min(beta, v);
+      if (beta <= alpha) break; // Alpha-beta pruning
+    }
+    return v;
+  }
+
+  //  """
+  //  Returns the optimal action for the current player on the board.
+  //  """
+  //  The minimax function should take a board as input, and return the optimal move for the player 
+  //   to move on that board.
+  //      The move returned should be the optimal action (i, j) that is one of the allowable 
+  //        actions on the board. 
+  //          If multiple moves are equally optimal, any of those moves is acceptable.
+  //      If the board is a terminal board, the minimax function should return None.
+  
+  const minimax = (board) => {
+    // Terminal board, return none
+    if (terminal(board)) {
+      console.log('hi from terminal minimax')
+      return null
+    }
+    console.log('Minimax running');
+    // X is max player, O is min player
+    const p = player(board);
+    let act = 99;
+
+    console.log(p);
+
+    if (p == 'X') {
+      let value = -Infinity;
+      console.log('hi from in');
+      let availableMoves = actions(board);
+      for (let i = 0; i < availableMoves.length; i++) {
+        const testValue = minValue(result(board, availableMoves[i]), -Infinity, Infinity);
+        if (testValue > value) {
+          value = testValue;
+          act = availableMoves[i];
+          
+        }
+      }
+    } else if (p == 'O') {
+      let value = Infinity;
+      console.log('hi from in 2');
+      let availableMoves = actions(board);
+      for (let i = 0; i < availableMoves.length; i++) {
+        const testValue = maxValue(result(board, availableMoves[i]), -Infinity, Infinity);
+        console.log('hi from let action of actions:', availableMoves[i]);
+        if (testValue < value) {
+          value = testValue;
+          act = availableMoves[i];
+          console.log('running inside ===========')
+        }
+      }
+    }
+    console.log('hi from out')
+    return act;
+  };
+
+  // const loo = () => {
+  //   let newacts = actions(['X', 'O', 'X', null, null, null, null, null, null]);
+  //   for (let i = 0; i < newacts.length; i++) {
+  //     console.log(newacts[i]);
+  //   }
+  // }
+  // loo();
+  //console.log(minimax(['X', 'O', 'X', null, null, null, null, null, null]));
 
   const checkGameOver = (boardCheck) => {
     return (
@@ -68,27 +224,22 @@ export default function ChildGameScreen({navigation}) {
     )
   };
 
+
   const whoWon = () => {
-    if (didOWin()) return 'O';
-    if (didXWin()) return 'X';
+    if (didOWin(realBoard)) return 'O';
+    if (didXWin(realBoard)) return 'X';
   }
 
-  const makeRandomMove = () => {
-    const availableSquares = board
-      .map((square, index) => (square === null ? index : null))
-      .filter((value) => value !== null)
-    
-    if (availableSquares.length === 0) return;
+  const makeSmartMove = (board) => {
 
-    const randomIndex = Math.floor(Math.random() * availableSquares.length);
-    const moveIndex = availableSquares[randomIndex]
+    const moveIndex = minimax(board);
     
     setAiPressedIndex(moveIndex); // // Temporarily mark this cell as "pressed"
     
     setTimeout(() => {
       const newBoard = [...board];
       newBoard[moveIndex] = 'O'; // Ai plays the move
-      setBoard(newBoard);
+      setrealBoard(newBoard);
 
       // Check for winner
       if (checkGameOver(newBoard)) {
@@ -103,14 +254,14 @@ export default function ChildGameScreen({navigation}) {
   }
 
   const handlePress = (index) => {
-    if (board[index] || isGameOver) {
+    if (realBoard[index] || isGameOver) {
       return; // Square taken or game already over
     }
     
     // Update the board with the move
-    const newBoard = [...board];
+    const newBoard = [...realBoard];
     newBoard[index] = isXNext ? "X" : "O"; // Update square with X or O
-    setBoard(newBoard);
+    setrealBoard(newBoard);
 
     // Check for winner
     if (checkGameOver(newBoard)) {
@@ -127,9 +278,9 @@ export default function ChildGameScreen({navigation}) {
   useEffect(() => {
     if (!isGameOver && !isXNext) {
       // Ai makes move after short delay
-      const makeMove = setTimeout(() => makeRandomMove(), 500);
-
-      return () => clearTimeout(makeMove); // Cleanup timeout
+      //const makeMove = setTimeout(() => makeSmartMove(realBoard), 500);
+      makeSmartMove(realBoard);
+      //return () => clearTimeout(makeMove); // Cleanup timeout
     }
   }, [isGameOver, isXNext]);
 
@@ -173,7 +324,7 @@ export default function ChildGameScreen({navigation}) {
           onPress={() => handlePress(index)}
           style={tw`w-full h-full items-center justify-center z-10 bg-white/10 rounded-md  ${isPressed ? 'opacity-20':null}`}
         >
-          <Text style={tw`text-[50px] font-bold text-white `}>{ board[index] }</Text>
+          <Text style={tw`text-[50px] font-bold text-white `}>{ realBoard[index] }</Text>
         </TouchableOpacity>
       </Animated.View>
     )
@@ -204,7 +355,7 @@ export default function ChildGameScreen({navigation}) {
         }
       
         <View style={tw`w-9/10 aspect-square  ${isGameOver ? '' : ''} flex-row flex-wrap`}>
-          {board.map((value, index) => 
+          {realBoard.map((value, index) => 
               renderCell(index)
             )
           }
@@ -220,7 +371,7 @@ export default function ChildGameScreen({navigation}) {
           >
           <TouchableOpacity style={tw`p-5`}
             onPress={() => {
-              setBoard(Array(9).fill(null));
+              setrealBoard(Array(9).fill(null));
               setIsEmpty(true);
               setIsGameOver(false);
               setIsXNext(true);

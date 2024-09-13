@@ -6,6 +6,7 @@ import tw from 'twrnc';
 import { DefaultTheme } from '@react-navigation/native';
 import { ImageBackground, View } from "react-native";
 import LocalGameScreen from "./screens/LocalGameScreen";
+import SmartGameScreen from "./screens/SmartGameScreen";
 
 
 const MyTheme = {
@@ -30,7 +31,7 @@ export default function AppNavigation() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="LocalGameScreen" component={LocalGameScreen} />
           <Stack.Screen name="ChildGameScreen" component={ChildGameScreen} />
-
+          <Stack.Screen name="SmartGameScreen" component={SmartGameScreen} />
         </Stack.Navigator>
         </NavigationContainer>
     </ImageBackground>

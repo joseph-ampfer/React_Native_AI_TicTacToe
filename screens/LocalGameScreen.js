@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, ImageBackground, SafeAreaView, BackHandler } from 'react-native';
+import { Text, View, TouchableOpacity, ImageBackground, BackHandler } from 'react-native';
 import tw from 'twrnc';
 import Animated, { Easing, FadeIn, FadeInDown, FadeInLeft, FadeInRight, FadeInUp, FadeOutDown, FadeOutRight, FadeOutUp, FlipInXUp, FlipOutXUp, ReduceMotion, ZoomIn, ZoomInDown, ZoomInEasyDown, ZoomInEasyUp, ZoomInRotate, ZoomInUp } from 'react-native-reanimated';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LocalGameScreen({navigation}) {
 
