@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, ImageBackground, SafeAreaView, BackHandler } from 'react-native';
 import tw from 'twrnc';
 import Animated, { Easing, FadeIn, FadeInDown, FadeInLeft, FadeInRight, FadeInUp, FadeOutDown, FadeOutRight, FadeOutUp, FlipInXUp, FlipOutXUp, ZoomInDown, ZoomInEasyDown } from 'react-native-reanimated';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default function ChildGameScreen({navigation}) {
@@ -180,6 +181,15 @@ export default function ChildGameScreen({navigation}) {
   return (
     <SafeAreaView style={tw`flex-1 z-0`}>
       <StatusBar style="light" />
+      
+      {/* === Top Bar ==== */}
+      <View >
+        <Animated.View entering={FadeIn.delay(200)} >
+          <TouchableOpacity style={tw`flex-row items-center pl-3 pt-4 pb-6 w-1/4`} onPress={() => navigation.push('Home')}>
+            <Ionicons name='arrow-back' size={28} style={tw`text-white/70`} />
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
 
       <View style={tw`flex-1  justify-center items-center `}>
         {isGameOver ? (
@@ -187,12 +197,12 @@ export default function ChildGameScreen({navigation}) {
               entering={FlipInXUp.delay(200).easing(Easing.cubic)}
               exiting={FlipOutXUp.delay(200).easing(Easing.cubic)}
             >
-              <Text style={tw`text-4xl text-white`}>Game over, { whoWon() } won!</Text>
+              <Text style={tw`text-4xl text-white mb-5 -mt-5`}>Game over, { whoWon() } won!</Text>
             </Animated.View>
-          ):(<Text style={tw`text-4xl text-white/0`}>Game over, won!</Text>)
+          ):(<Text style={tw`text-4xl text-white/0 mb-5 -mt-5`}>Game over, won!</Text>)
         }
       
-        <View style={tw`w-9/10 aspect-square ${isGameOver ? '' : ''} flex-row flex-wrap`}>
+        <View style={tw`w-9/10 aspect-square  ${isGameOver ? '' : ''} flex-row flex-wrap`}>
           {board.map((value, index) => 
               renderCell(index)
             )
@@ -207,7 +217,7 @@ export default function ChildGameScreen({navigation}) {
             exiting={FadeOutDown.delay(200).duration(1000).springify()}
             style={tw`w-full items-center`}
           >
-          <TouchableOpacity style={tw` p-5`}
+          <TouchableOpacity style={tw`p-5`}
             onPress={() => {
               setBoard(Array(9).fill(null));
               setIsEmpty(true);

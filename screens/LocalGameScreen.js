@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, ImageBackground, SafeAreaView, BackHandler } from 'react-native';
 import tw from 'twrnc';
 import Animated, { Easing, FadeIn, FadeInDown, FadeInLeft, FadeInRight, FadeInUp, FadeOutDown, FadeOutRight, FadeOutUp, FlipInXUp, FlipOutXUp, ReduceMotion, ZoomIn, ZoomInDown, ZoomInEasyDown, ZoomInEasyUp, ZoomInRotate, ZoomInUp } from 'react-native-reanimated';
-
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function LocalGameScreen({navigation}) {
 
@@ -142,6 +142,15 @@ export default function LocalGameScreen({navigation}) {
   return (
     <SafeAreaView style={tw`flex-1 z-0`}>
       <StatusBar style="light" />
+
+      {/* === Top Bar ==== */}
+      <View >
+        <Animated.View entering={FadeIn.delay(200)} >
+          <TouchableOpacity style={tw`flex-row items-center pl-3 pt-4 pb-6 w-1/4`} onPress={() => navigation.push('Home')}>
+            <Ionicons name='arrow-back' size={28} style={tw`text-white/70`} />
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
 
       <View style={tw`flex-1  justify-center items-center `}>
         {isGameOver ? (
