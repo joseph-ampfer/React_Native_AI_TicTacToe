@@ -3,6 +3,8 @@ import React from 'react';
 import tw from 'twrnc';
 import { StatusBar } from 'expo-status-bar';
 import Animated, { Easing, FadeInDown, FlipInEasyX, FlipInXUp, ReduceMotion, ZoomIn } from 'react-native-reanimated';
+import LottieView from 'lottie-react-native';
+
 
 export default function HomeScreen({ navigation }) {
   
@@ -14,10 +16,20 @@ export default function HomeScreen({ navigation }) {
         {/* <View style={tw``}>
           <Text style={tw`text-4xl text-white mb-5`}>Choose opponent</Text>
         </View> */}
+        <View style={tw`h-full w-full absolute opacity-100`}>
+          <LottieView
+            source={require('../assets/lotties/bgMountainNotOp.json')}
+            style={{ width: '100%', height: '100%' }}
+            autoPlay
+            loop
+            resizeMode='cover'
+            speed={1}
+          />
+        </View>
 
         <Animated.View 
           entering={ZoomIn.delay(200).springify().mass(0.5).reduceMotion(ReduceMotion.Never).withInitialValues({ transform: [{ scale: 0.01}] })}
-          style={tw`bg-white/20 w-full p-5 rounded-lg mb-5`}
+          style={tw`bg-black/50 w-full p-5 rounded-lg mb-5`}
         >
           <TouchableOpacity
             onPress={() => navigation.push('LocalGameScreen')}
@@ -29,7 +41,7 @@ export default function HomeScreen({ navigation }) {
 
         <Animated.View 
           entering={ZoomIn.delay(400).springify().mass(0.5).reduceMotion(ReduceMotion.Never).withInitialValues({ transform: [{ scale: 0.01}] })}
-          style={tw`bg-white/20 w-full p-5 rounded-lg mb-5`}
+          style={tw`bg-black/50 w-full p-5 rounded-lg mb-5`}
         >
           <TouchableOpacity
             onPress={() => navigation.push('ChildGameScreen')}
@@ -41,7 +53,7 @@ export default function HomeScreen({ navigation }) {
 
         <Animated.View 
           entering={ZoomIn.delay(600).springify().mass(0.5).reduceMotion(ReduceMotion.Never).withInitialValues({ transform: [{ scale: 0.01}] })}
-          style={tw`bg-white/20 w-full p-5 rounded-lg mb-5`}
+          style={tw`bg-black/50 w-full p-5 rounded-lg mb-5`}
         >
           <TouchableOpacity
             onPress={() => navigation.push('SmartGameScreen')}

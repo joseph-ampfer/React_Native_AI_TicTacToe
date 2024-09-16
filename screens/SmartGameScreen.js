@@ -1,13 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, ImageBackground, BackHandler } from 'react-native';
+import { Text, View, TouchableOpacity, ImageBackground, BackHandler, Dimensions } from 'react-native';
 import tw from 'twrnc';
 import Animated, { Easing, FadeIn, FadeInDown, FadeInLeft, FadeInRight, FadeInUp, FadeOutDown, FadeOutRight, FadeOutUp, FlipInXUp, FlipOutXUp, ZoomInDown, ZoomInEasyDown } from 'react-native-reanimated';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LottieView from 'lottie-react-native';
 
 
-export default function SmartGameScreen({navigation}) {
+const screenDimensions = Dimensions.get('screen');
+
+export default function SmartGameScreen({ navigation }) {
+  
+  
 
   // Initialize an empty board
   const [realBoard, setrealBoard] = useState(Array(9).fill(null));
@@ -322,7 +327,7 @@ export default function SmartGameScreen({navigation}) {
       >
         <TouchableOpacity
           onPress={() => handlePress(index)}
-          style={tw`w-full h-full items-center justify-center z-10 bg-white/10 rounded-md  ${isPressed ? 'opacity-20':null}`}
+          style={tw`w-full h-full items-center justify-center z-10 bg-white/20 rounded-md  ${isPressed ? 'opacity-20':null}`}
         >
           <Text style={tw`text-[50px] font-bold text-white `}>{ realBoard[index] }</Text>
         </TouchableOpacity>
@@ -333,6 +338,17 @@ export default function SmartGameScreen({navigation}) {
   return (
     <SafeAreaView style={tw`flex-1 z-0`}>
       <StatusBar style="light" />
+
+      <View style={[tw`absolute -z-20`, {width: screenDimensions.width, height: screenDimensions.height}]}>
+        <LottieView
+          source={require('../assets/lotties/gradientBgNotOp.json')}
+          style={tw`h-full w-full`}
+          autoPlay
+          loop
+          speed={1}
+          resizeMode='cover'
+        />
+      </View>
       
       {/* === Top Bar ==== */}
       <View >
