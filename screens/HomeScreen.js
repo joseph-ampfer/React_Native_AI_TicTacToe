@@ -16,20 +16,25 @@ export default function HomeScreen({ navigation }) {
         {/* <View style={tw``}>
           <Text style={tw`text-4xl text-white mb-5`}>Choose opponent</Text>
         </View> */}
-        <View style={tw`h-full w-full absolute opacity-100`}>
+        {/* <View style={tw`h-full w-full absolute opacity-100`}>
           <LottieView
-            source={require('../assets/lotties/bgMountainNotOp.json')}
+            source={require('../assets/lotties/gradientBgNotOp.json')}
             style={{ width: '100%', height: '100%' }}
             autoPlay
             loop
             resizeMode='cover'
             speed={1}
           />
-        </View>
+        </View> */}
 
+        <View style={tw`mb-8 `}>
+          <Text style={tw`text-5xl text-white text-center font-bold`}>Unbeatable</Text>
+          <Text style={tw`text-5xl text-white text-center font-bold`} >AI Tic Tac Toe</Text>
+        </View>
+        
         <Animated.View 
-          entering={ZoomIn.delay(200).springify().mass(0.5).reduceMotion(ReduceMotion.Never).withInitialValues({ transform: [{ scale: 0.01}] })}
-          style={tw`bg-black/50 w-full p-5 rounded-lg mb-5`}
+          entering={FadeInDown.delay(200).springify()}
+          style={tw`bg-white/30 w-full p-5 rounded-lg mb-5`}
         >
           <TouchableOpacity
             onPress={() => navigation.push('LocalGameScreen')}
@@ -40,26 +45,26 @@ export default function HomeScreen({ navigation }) {
         </Animated.View>
 
         <Animated.View 
-          entering={ZoomIn.delay(400).springify().mass(0.5).reduceMotion(ReduceMotion.Never).withInitialValues({ transform: [{ scale: 0.01}] })}
-          style={tw`bg-black/50 w-full p-5 rounded-lg mb-5`}
+          entering={FadeInDown.delay(400).springify()}
+          style={tw`bg-white/30 w-full p-5 rounded-lg mb-5`}
         >
           <TouchableOpacity
             onPress={() => navigation.push('ChildGameScreen')}
             style={tw``}
           >
-            <Text style={tw`text-4xl text-white text-center`}>IQ 9 (Child)</Text>
+            <Text style={tw`text-4xl text-white text-center`}>Dumb AI</Text>
           </TouchableOpacity>
         </Animated.View>
 
         <Animated.View 
-          entering={ZoomIn.delay(600).springify().mass(0.5).reduceMotion(ReduceMotion.Never).withInitialValues({ transform: [{ scale: 0.01}] })}
-          style={tw`bg-black/50 w-full p-5 rounded-lg mb-5`}
+          entering={FadeInDown.delay(600).springify()}
+          style={tw`bg-white/30 w-full p-5 rounded-lg mb-5`}
         >
           <TouchableOpacity
             onPress={() => navigation.push('SmartGameScreen')}
             style={tw``}
           >
-            <Text style={tw`text-4xl text-white text-center`}>IQ 999 (Einstein)</Text>
+            <Text style={tw`text-4xl text-white text-center`}>Smart AI</Text>
           </TouchableOpacity>
         </Animated.View>
 

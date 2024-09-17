@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Tic-Tac-Toe",
+    "name": "AI Tic-Tac-Toe",
     "slug": "Tic-Tac-Toe",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,12 +16,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundImage": "./assets/iconbackground.png"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "81715202-0462-4230-b11e-ae94bcdb1d4b"
+      }
+    },
+    "owner": "jampfer"
   }
 }

@@ -321,13 +321,13 @@ export default function SmartGameScreen({ navigation }) {
     
     return (
       <Animated.View
-        entering={ZoomInDown.delay(100 * index).springify()}
+        entering={FadeInDown.delay(200 * index).springify()}
         key={index}
         style={tw`h-1/3 aspect-square border-4 border-white/0 `}
       >
         <TouchableOpacity
           onPress={() => handlePress(index)}
-          style={tw`w-full h-full items-center justify-center z-10 bg-white/20 rounded-md  ${isPressed ? 'opacity-20':null}`}
+          style={tw`w-full h-full items-center justify-center z-10 bg-white/40 rounded-md  ${isPressed ? 'opacity-20':null}`}
         >
           <Text style={tw`text-[50px] font-bold text-white `}>{ realBoard[index] }</Text>
         </TouchableOpacity>
@@ -339,7 +339,7 @@ export default function SmartGameScreen({ navigation }) {
     <SafeAreaView style={tw`flex-1 z-0`}>
       <StatusBar style="light" />
 
-      <View style={[tw`absolute -z-20`, {width: screenDimensions.width, height: screenDimensions.height}]}>
+      {/* <View style={[tw`absolute -z-20`, {width: screenDimensions.width, height: screenDimensions.height}]}>
         <LottieView
           source={require('../assets/lotties/gradientBgNotOp.json')}
           style={tw`h-full w-full`}
@@ -348,10 +348,10 @@ export default function SmartGameScreen({ navigation }) {
           speed={1}
           resizeMode='cover'
         />
-      </View>
+      </View> */}
       
       {/* === Top Bar ==== */}
-      <View >
+      <View style={tw``}>
         <Animated.View entering={FadeIn.delay(200)} >
           <TouchableOpacity style={tw`flex-row items-center pl-3 pt-4 pb-6 w-1/4`} onPress={() => navigation.push('Home')}>
             <Ionicons name='arrow-back' size={28} style={tw`text-white/70`} />
@@ -359,7 +359,7 @@ export default function SmartGameScreen({ navigation }) {
         </Animated.View>
       </View>
 
-      <View style={tw`flex-1  justify-center items-center `}>
+      <View style={tw`flex-1  justify-center items-center pb-20 `}>
         {isGameOver ? (
             <Animated.View
               entering={FlipInXUp.delay(200).easing(Easing.cubic)}

@@ -4,9 +4,10 @@ import ChildGameScreen from "./screens/ChildGameScreen";
 import HomeScreen from "./screens/HomeScreen";
 import tw from 'twrnc';
 import { DefaultTheme } from '@react-navigation/native';
-import { ImageBackground, View } from "react-native";
+import { Dimensions, ImageBackground, View } from "react-native";
 import LocalGameScreen from "./screens/LocalGameScreen";
 import SmartGameScreen from "./screens/SmartGameScreen";
+import LottieView from "lottie-react-native";
 
 
 const MyTheme = {
@@ -17,15 +18,23 @@ const MyTheme = {
   },
 };
 
+const dimensions = Dimensions.get('screen');
+
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation() {
   return (
-    <ImageBackground
-      blurRadius={70} 
-      source={require('./assets/images/tic tac toe background (2).png')} 
-      style={tw`w-full h-full absolute `} 
-    >
+    <View style={tw`flex-1`}>
+      <View style={tw`h-full w-full absolute opacity-100 -z-50`}>
+        <LottieView
+          source={require('./assets/lotties/gradient2NotOp.json')}
+          style={{ width: dimensions.width, height: dimensions.height }}
+          autoPlay
+          loop
+          resizeMode='cover'
+          speed={1}
+        />
+      </View>
       <NavigationContainer theme={MyTheme}>
         <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, animation: 'none' }}>
           <Stack.Screen name="Home" component={HomeScreen} />
@@ -34,6 +43,6 @@ export default function AppNavigation() {
           <Stack.Screen name="SmartGameScreen" component={SmartGameScreen} />
         </Stack.Navigator>
         </NavigationContainer>
-    </ImageBackground>
+    </View>
   );
 };

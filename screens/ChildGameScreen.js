@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, ImageBackground, BackHandler } from 'react-native';
 import tw from 'twrnc';
-import Animated, { Easing, FadeIn, FadeInDown, FadeInLeft, FadeInRight, FadeInUp, FadeOutDown, FadeOutRight, FadeOutUp, FlipInXUp, FlipOutXUp, ZoomInDown, ZoomInEasyDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeIn, FadeInDown, FadeInLeft, FadeInRight, FadeInUp, FadeOutDown, FadeOutRight, FadeOutUp, FlipInXUp, FlipOutXUp, ZoomInDown, ZoomInEasyDown, ZoomInRotate, ZoomInUp } from 'react-native-reanimated';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -165,13 +165,13 @@ export default function ChildGameScreen({navigation}) {
     
     return (
       <Animated.View
-        entering={ZoomInDown.delay(100 * index).springify()}
+        entering={ZoomInRotate.delay(100 * index).duration(400)}
         key={index}
         style={tw`h-1/3 aspect-square border-4 border-white/0 `}
       >
         <TouchableOpacity
           onPress={() => handlePress(index)}
-          style={tw`w-full h-full items-center justify-center z-10 bg-white/10 rounded-md  ${isPressed ? 'opacity-20':null}`}
+          style={tw`w-full h-full items-center justify-center z-10 bg-white/40 rounded-md  ${isPressed ? 'opacity-20':null}`}
         >
           <Text style={tw`text-[50px] font-bold text-white `}>{ board[index] }</Text>
         </TouchableOpacity>
@@ -192,7 +192,7 @@ export default function ChildGameScreen({navigation}) {
         </Animated.View>
       </View>
 
-      <View style={tw`flex-1  justify-center items-center `}>
+      <View style={tw`flex-1  justify-center items-center pb-20`}>
         {isGameOver ? (
             <Animated.View
               entering={FlipInXUp.delay(200).easing(Easing.cubic)}

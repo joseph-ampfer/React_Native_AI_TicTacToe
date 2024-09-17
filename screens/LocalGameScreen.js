@@ -132,7 +132,7 @@ export default function LocalGameScreen({navigation}) {
       >
         <TouchableOpacity
           onPress={() => handlePress(index)}
-          style={tw`w-full h-full items-center justify-center z-10 bg-white/10 rounded-md `}
+          style={tw`w-full h-full items-center justify-center z-10 bg-white/40 rounded-md `}
         >
           <Text style={tw`text-[50px] font-bold text-white `}>{ board[index] }</Text>
         </TouchableOpacity>
@@ -153,7 +153,8 @@ export default function LocalGameScreen({navigation}) {
         </Animated.View>
       </View>
 
-      <View style={tw`flex-1  justify-center items-center `}>
+      
+      <View style={tw`flex-1  justify-center items-center pb-20`}>
         {isGameOver ? (
             <Animated.View
               entering={FlipInXUp.delay(200).easing(Easing.cubic)}
